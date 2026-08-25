@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy-900: #0B192C;
+  --color-navy-800: #12253d;
+  --color-navy-700: #1a3352;
+  --color-amber-accent: #FFB200;
+  --color-cyan-accent: #00D8D6;
+}
+
+@layer base {
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #0B192C;
+    color: #e5e7eb;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    min-height: 100vh;
+    width: 100%;
+  }
+}
+
+@layer components {
+  .card-navy {
+    background-color: #12253d;
+    border: 1px solid #1a3352;
+    border-radius: 0.75rem;
+  }
+
+  .tab-active {
+    border-bottom: 2px solid #FFB200;
+    color: #FFB200;
+  }
+
+  .pulse-dot {
+    animation: pulse-dot 2s infinite;
+  }
+
+  @keyframes pulse-dot {
+    0% {
+      box-shadow: 0 0 0 0 rgba(0, 216, 214, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(0, 216, 214, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(0, 216, 214, 0);
+    }
+  }
+
+  .typewriter-cursor::after {
+    content: '|';
+    animation: blink 1s step-end infinite;
+    color: #FFB200;
+  }
+
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B192C;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1a3352;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2a4365;
+}
