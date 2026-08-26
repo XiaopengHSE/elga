@@ -16,6 +16,9 @@ import { logisticsMetrics, logisticsHistoryData, aiAlertData } from '../data/log
 import { useI18n } from '../i18n/context';
 import KeyMarkets from './KeyMarkets';
 import OperationalAssets from './OperationalAssets';
+import CompanyHistory from './CompanyHistory';
+import RailwayExpansionPlan from './RailwayExpansionPlan';
+import ProcessingPlantInfo from './ProcessingPlantInfo';
 
 const iconMap: Record<string, React.ReactNode> = {
   mining: <Pickaxe size={20} />,
@@ -171,6 +174,33 @@ export default function LogisticsTab() {
         transition={{ delay: 0.6 }}
       >
         <OperationalAssets />
+      </motion.div>
+
+      {/* Company History & Railway Expansion */}
+      <div className="grid lg:grid-cols-2 gap-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+        >
+          <CompanyHistory />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+        >
+          <RailwayExpansionPlan />
+        </motion.div>
+      </div>
+
+      {/* Processing Plant */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.9 }}
+      >
+        <ProcessingPlantInfo />
       </motion.div>
     </div>
   );

@@ -63,6 +63,7 @@ declare module 'lucide-react' {
   export const Ruler: FC<any>;
   export const Scale: FC<any>;
   export const Send: FC<any>;
+  export const Settings: FC<any>;
   export const ShieldCheck: FC<any>;
   export const Ship: FC<any>;
   export const Sliders: FC<any>;
