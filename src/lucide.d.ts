@@ -24,6 +24,7 @@ declare module 'lucide-react' {
   export const Anchor: FC<any>;
   export const ArrowDown: FC<any>;
   export const ArrowRight: FC<any>;
+  export const ArrowUp: FC<any>;
   export const BarChart3: FC<any>;
   export const Bot: FC<any>;
   export const Box: FC<any>;

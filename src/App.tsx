@@ -9,6 +9,7 @@ import BlendingTab from './components/BlendingTab';
 import ChatbotTab from './components/ChatbotTab';
 
 import NewsTab from './components/NewsTab';
+import ScrollToTop from './components/ScrollToTop';
 
 const tabComponents: Record<string, React.ReactNode> = {
   audit: <QualityAuditTab />,
@@ -53,6 +54,7 @@ function AppContent() {
       </main>
 
       <Footer />
+      <ScrollToTop />
     </div>
   );
 }
