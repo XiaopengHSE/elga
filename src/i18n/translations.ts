@@ -15,6 +15,7 @@ export const translations = {
     tabAudit: '中俄贸易与单据智审',
     tabLogistics: '海铁联运与物流看板',
     tabBlending: '智能配煤与报价',
+    tabNews: '新闻动态',
     tabAgent: '集团智能助手',
 
     // Footer
@@ -108,6 +109,12 @@ export const translations = {
     csrLabel: 'CSR (反应后强度)',
     criLabel: 'CRI (反应性指数)',
 
+    // News Tab
+    newsTitle: 'ELGA 新闻动态',
+    newsSubtitle: '来自 ELGA 官方 Telegram 频道的最新资讯',
+    newsReadMore: '展开全文',
+    newsReadLess: '收起',
+
     // Chatbot
     chatWelcome: '您好！我是埃尔加集团 AI 智能助手。我可以为您介绍 ELGAUGOL 矿山、ELGA-ROAD 铁路、ELGALOGISTICS 物流等业务信息。请选择下方快捷问题或直接输入您的问题。',
     chatQuickQuestions: '快捷问题',
@@ -155,6 +162,7 @@ export const translations = {
     tabAudit: 'Trade & Quality Audit',
     tabLogistics: 'Logistics Analytics',
     tabBlending: 'Smart Blending',
+    tabNews: 'News',
     tabAgent: 'Corporate AI Agent',
 
     footerLine1: '© 2024 Dalian Elga International Trade Co., Ltd. · ELGA Group China HQ',
@@ -242,6 +250,12 @@ export const translations = {
     csrLabel: 'CSR (Coke Strength After Reaction)',
     criLabel: 'CRI (Coke Reactivity Index)',
 
+    // News Tab
+    newsTitle: 'ELGA News',
+    newsSubtitle: 'Latest updates from the official ELGA Telegram channel',
+    newsReadMore: 'Read more',
+    newsReadLess: 'Show less',
+
     chatWelcome: 'Hello! I am the ELGA Group AI Smart Assistant. I can provide information about ELGAUGOL Mine, ELGA-ROAD Railway, ELGALOGISTICS, and other business areas. Please select a quick question below or type your own.',
     chatQuickQuestions: 'Quick Questions',
     chatPlaceholder: 'Enter your question...',
@@ -285,6 +299,7 @@ For more details, please select a quick question above or contact the business d
     tabAudit: 'Торговля и аудит качества',
     tabLogistics: 'Логистика и аналитика',
     tabBlending: 'Умное смешивание',
+    tabNews: 'Новости',
     tabAgent: 'Корпоративный AI-ассистент',
 
     footerLine1: '© 2024 Далянь Элга Интернешнл Трейд Ко., Лтд. · Китайский штаб группы Элга',
@@ -371,6 +386,12 @@ For more details, please select a quick question above or contact the business d
     chartResult: 'Смешанный',
     csrLabel: 'CSR (прочность кокса после реакции)',
     criLabel: 'CRI (индекс реактивности кокса)',
+
+    // News Tab
+    newsTitle: 'Новости ЭЛГА',
+    newsSubtitle: 'Последние обновления из официального Telegram-канала ЭЛГА',
+    newsReadMore: 'Читать далее',
+    newsReadLess: 'Свернуть',
 
     chatWelcome: 'Здравствуйте! Я AI-ассистент группы Элга. Могу рассказать о шахте Элгауголь, железной дороге Элга-Роуд, логистике Элгалогистикс и других направлениях. Выберите быстрый вопрос ниже или введите свой.',
     chatQuickQuestions: 'Быстрые вопросы',

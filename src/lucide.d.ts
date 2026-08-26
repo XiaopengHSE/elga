@@ -28,8 +28,11 @@ declare module 'lucide-react' {
   export const Bot: FC<any>;
   export const Box: FC<any>;
   export const Building2: FC<any>;
+  export const Calendar: FC<any>;
   export const CheckCircle: FC<any>;
   export const ChevronDown: FC<any>;
+  export const ChevronLeft: FC<any>;
+  export const ChevronRight: FC<any>;
   export const Clock: FC<any>;
   export const Factory: FC<any>;
   export const FileCheck: FC<any>;
@@ -40,6 +43,7 @@ declare module 'lucide-react' {
   export const Gem: FC<any>;
   export const Globe: FC<any>;
   export const HardHat: FC<any>;
+  export const Heart: FC<any>;
   export const Info: FC<any>;
   export const Languages: FC<any>;
   export const LayoutDashboard: FC<any>;
@@ -47,10 +51,12 @@ declare module 'lucide-react' {
   export const Leaf: FC<any>;
   export const Lightbulb: FC<any>;
   export const MapPin: FC<any>;
+  export const MessageCircle: FC<any>;
   export const MessageSquare: FC<any>;
   export const Microscope: FC<any>;
   export const Minus: FC<any>;
   export const Mountain: FC<any>;
+  export const Newspaper: FC<any>;
   export const Package: FC<any>;
   export const Pickaxe: FC<any>;
   export const Plus: FC<any>;
@@ -69,5 +75,6 @@ declare module 'lucide-react' {
   export const Upload: FC<any>;
   export const User: FC<any>;
   export const Warehouse: FC<any>;
+  export const X: FC<any>;
   export const Zap: FC<any>;
 }

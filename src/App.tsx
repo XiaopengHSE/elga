@@ -8,11 +8,14 @@ import LogisticsTab from './components/LogisticsTab';
 import BlendingTab from './components/BlendingTab';
 import ChatbotTab from './components/ChatbotTab';
 
+import NewsTab from './components/NewsTab';
+
 const tabComponents: Record<string, React.ReactNode> = {
   audit: <QualityAuditTab />,
   logistics: <LogisticsTab />,
   blending: <BlendingTab />,
   agent: <ChatbotTab />,
+  news: <NewsTab />,
 };
 
 function Footer() {

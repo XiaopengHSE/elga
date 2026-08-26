@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { FileCheck, BarChart3, Sliders, MessageSquare } from 'lucide-react';
+import { FileCheck, BarChart3, Sliders, MessageSquare, Newspaper } from 'lucide-react';
 import { useI18n } from '../i18n/context';
 
 interface Tab {
@@ -20,6 +20,7 @@ export default function TabNavigation({ activeTab, onTabChange }: TabNavigationP
     { id: 'audit', labelKey: 'tabAudit', icon: <FileCheck size={18} /> },
     { id: 'logistics', labelKey: 'tabLogistics', icon: <BarChart3 size={18} /> },
     { id: 'blending', labelKey: 'tabBlending', icon: <Sliders size={18} /> },
+    { id: 'news', labelKey: 'tabNews', icon: <Newspaper size={18} /> },
     { id: 'agent', labelKey: 'tabAgent', icon: <MessageSquare size={18} /> },
   ];
 
