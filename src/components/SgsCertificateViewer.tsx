@@ -10,8 +10,10 @@ import {
   ashFusibility,
   netCalorificValue,
 } from '../data/sgsCertificateData';
+import { useI18n } from '../i18n/context';
 
 export default function SgsCertificateViewer() {
+  const { t, lang } = useI18n();
   const airDry = proximateAnalysis.find((p) => p.basis === 'Air Dry Basis')!;
 
   return (
@@ -27,15 +29,15 @@ export default function SgsCertificateViewer() {
             <FileCheck size={20} className="text-emerald-500" />
           </div>
           <div className="min-w-0">
-            <h3 className="text-sm font-semibold text-white">SGS Certificate No. {sgsCertificate.certificateNo}</h3>
+            <h3 className="text-sm font-semibold text-white">{t('sgsCertNo')} {sgsCertificate.certificateNo}</h3>
             <p className="text-xs text-gray-400 mt-1">
-              {sgsCertificate.lab} · Lab No: {sgsCertificate.labNo}
+              {sgsCertificate.lab} · {t('sgsLabNo')}: {sgsCertificate.labNo}
             </p>
             <p className="text-xs text-gray-500 mt-0.5">
-              {sgsCertificate.principal} · Sample: {sgsCertificate.sampleType}
+              {sgsCertificate.principal} · {t('sgsSample')}: {sgsCertificate.sampleType}
             </p>
             <p className="text-xs text-gray-500 mt-0.5">
-              Received: {sgsCertificate.sampleReceived} · Tested: {sgsCertificate.sampleTested} · Methods: {sgsCertificate.methods}
+              {t('sgsReceived')}: {sgsCertificate.sampleReceived} · {t('sgsTested')}: {sgsCertificate.sampleTested} · {t('sgsMethods')}: {sgsCertificate.methods}
             </p>
           </div>
         </div>
@@ -43,10 +45,10 @@ export default function SgsCertificateViewer() {
 
       {/* Key Metrics Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <MetricCard icon={<Flame size={16} />} label="Ash (Air Dry)" value={`${airDry.ash}%`} sub="Declared: 16%" color="text-amber-accent" />
-        <MetricCard icon={<FlaskConical size={16} />} label="Total Sulfur" value={`${airDry.totalSulfur}%`} sub="Declared: <0.21%" color="text-cyan-accent" />
-        <MetricCard icon={<Gauge size={16} />} label="Max Fluidity" value={`${cokingProperties.maxFluidity.toLocaleString()}`} sub="dd/min (Gieseler)" color="text-emerald-400" />
-        <MetricCard icon={<Scale size={16} />} label="CSR / CRI" value={`${cokingProperties.csr}% / ${cokingProperties.cri}%`} sub="Coke Strength/Reactivity" color="text-emerald-400" />
+        <MetricCard icon={<Flame size={16} />} label={t('sgsAirDry')} value={`${airDry.ash}%`} sub={`${t('sgsDeclared')}: 16%`} color="text-amber-accent" />
+        <MetricCard icon={<FlaskConical size={16} />} label={t('sgsTotalSulfur')} value={`${airDry.totalSulfur}%`} sub={`${t('sgsDeclared')}: <0.21%`} color="text-cyan-accent" />
+        <MetricCard icon={<Gauge size={16} />} label={t('sgsMaxFluidity')} value={`${cokingProperties.maxFluidity.toLocaleString()}`} sub={t('sgsGieselerDesc')} color="text-emerald-400" />
+        <MetricCard icon={<Scale size={16} />} label={t('sgsCsrCri')} value={`${cokingProperties.csr}% / ${cokingProperties.cri}%`} sub={t('sgsCokeStrengthDesc')} color="text-emerald-400" />
       </div>
 
       {/* Proximate & Ultimate Analysis */}
@@ -54,16 +56,16 @@ export default function SgsCertificateViewer() {
         <div className="card-navy p-4">
           <div className="flex items-center gap-2 mb-3">
             <Microscope size={16} className="text-amber-accent" />
-            <h4 className="text-sm font-semibold text-white">Proximate Analysis (空干基 Air Dry)</h4>
+            <h4 className="text-sm font-semibold text-white">{t('sgsProximateTitle')}</h4>
           </div>
           <div className="space-y-2">
             {[
-              { label: 'Moisture', value: `${airDry.moisture}%`, key: 'moisture' },
-              { label: 'Ash', value: `${airDry.ash}%`, key: 'ash' },
-              { label: 'Volatile Matter', value: `${airDry.volatileMatter}%`, key: 'volatile' },
-              { label: 'Fixed Carbon', value: `${airDry.fixedCarbon}%`, key: 'fixedCarbon' },
-              { label: 'Total Sulfur', value: `${airDry.totalSulfur}%`, key: 'sulfur' },
-              { label: 'Gross Calorific Value', value: `${airDry.grossCalorificValue} kcal/kg`, key: 'calorific' },
+              { label: t('sgsMoisture'), value: `${airDry.moisture}%`, key: 'moisture' },
+              { label: t('sgsAsh'), value: `${airDry.ash}%`, key: 'ash' },
+              { label: t('sgsVolatile'), value: `${airDry.volatileMatter}%`, key: 'volatile' },
+              { label: t('sgsFixedCarbon'), value: `${airDry.fixedCarbon}%`, key: 'fixedCarbon' },
+              { label: t('sgsTotalSulfur'), value: `${airDry.totalSulfur}%`, key: 'sulfur' },
+              { label: t('sgsGrossCalorific'), value: `${airDry.grossCalorificValue} kcal/kg`, key: 'calorific' },
             ].map((item) => (
               <div key={item.key} className="flex justify-between items-center py-1.5 border-b border-navy-700/50 last:border-0">
                 <span className="text-xs text-gray-400">{item.label}</span>
@@ -72,20 +74,20 @@ export default function SgsCertificateViewer() {
             ))}
           </div>
           <div className="mt-3 p-2 rounded bg-emerald-500/10 border border-emerald-500/20">
-            <span className="text-xs text-emerald-400">Net Calorific Value (as received): {netCalorificValue} kcal/kg</span>
+            <span className="text-xs text-emerald-400">{t('sgsNetCalorific')}: {netCalorificValue} kcal/kg</span>
           </div>
         </div>
 
         <div className="card-navy p-4">
           <div className="flex items-center gap-2 mb-3">
             <Gem size={16} className="text-cyan-accent" />
-            <h4 className="text-sm font-semibold text-white">Ultimate Analysis (空干基 Air Dry)</h4>
+            <h4 className="text-sm font-semibold text-white">{t('sgsUltimateTitle')}</h4>
           </div>
           <div className="space-y-2">
             {[
-              { label: 'Carbon', value: `${ultimateAnalysis[1].carbon}%`, key: 'carbon' },
-              { label: 'Hydrogen', value: `${ultimateAnalysis[1].hydrogen}%`, key: 'hydrogen' },
-              { label: 'Nitrogen', value: `${ultimateAnalysis[1].nitrogen}%`, key: 'nitrogen' },
+              { label: t('sgsCarbon'), value: `${ultimateAnalysis[1].carbon}%`, key: 'carbon' },
+              { label: t('sgsHydrogen'), value: `${ultimateAnalysis[1].hydrogen}%`, key: 'hydrogen' },
+              { label: t('sgsNitrogen'), value: `${ultimateAnalysis[1].nitrogen}%`, key: 'nitrogen' },
             ].map((item) => (
               <div key={item.key} className="flex justify-between items-center py-1.5 border-b border-navy-700/50 last:border-0">
                 <span className="text-xs text-gray-400">{item.label}</span>
@@ -96,13 +98,13 @@ export default function SgsCertificateViewer() {
           <div className="mt-3 pt-3 border-t border-navy-700/50">
             <div className="flex items-center gap-2 mb-2">
               <Thermometer size={16} className="text-amber-accent" />
-              <h4 className="text-sm font-semibold text-white">Ash Fusibility (Reducing)</h4>
+              <h4 className="text-sm font-semibold text-white">{t('sgsFusibilityTitle')}</h4>
             </div>
             <div className="space-y-1.5">
               {[
-                { label: 'Deformation (DT)', value: `${ashFusibility.deformationReducing}°C` },
-                { label: 'Hemisphere (HT)', value: `${ashFusibility.hemisphereReducing}°C` },
-                { label: 'Flow (FT)', value: `${ashFusibility.flowReducing}°C` },
+                { label: t('sgsDeformation'), value: `${ashFusibility.deformationReducing}°C` },
+                { label: t('sgsHemisphere'), value: `${ashFusibility.hemisphereReducing}°C` },
+                { label: t('sgsFlow'), value: `${ashFusibility.flowReducing}°C` },
               ].map((item) => (
                 <div key={item.label} className="flex justify-between items-center">
                   <span className="text-xs text-gray-400">{item.label}</span>
@@ -118,35 +120,35 @@ export default function SgsCertificateViewer() {
       <div className="card-navy p-4">
         <div className="flex items-center gap-2 mb-3">
           <Ruler size={16} className="text-amber-accent" />
-          <h4 className="text-sm font-semibold text-white">Coking & Plastic Properties</h4>
+          <h4 className="text-sm font-semibold text-white">{t('sgsCokingTitle')}</h4>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <CokingPropCard label="HGI" value={cokingProperties.hgi} desc="Hardgrove Index" />
-          <CokingPropCard label="FSI" value={cokingProperties.fsi} desc="Free Swelling Index" />
-          <CokingPropCard label="RI" value={cokingProperties.rogaIndex} desc="Roga Index (1:5)" />
-          <CokingPropCard label="G" value={cokingProperties.cakingIndex} desc="Caking Index (1:5)" />
-          <CokingPropCard label="GK Type" value={cokingProperties.gkCokeType} desc="Gray-King Coke Type" />
-          <CokingPropCard label="Max Fluidity" value={cokingProperties.maxFluidity.toLocaleString()} desc="dd/min (Gieseler)" highlight />
-          <CokingPropCard label="Ro (r)" value={cokingProperties.vitriniteReflectance} desc="Vitrinite Reflectance %" />
-          <CokingPropCard label="Vitrinite" value={`${cokingProperties.vitriniteContent}%`} desc="Vitrinite Content" />
+          <CokingPropCard label={t('sgsHGI')} value={cokingProperties.hgi} desc={t('sgsHardgroveDesc')} />
+          <CokingPropCard label={t('sgsFSI')} value={cokingProperties.fsi} desc={t('sgsFreeSwellingDesc')} />
+          <CokingPropCard label={t('sgsRI')} value={cokingProperties.rogaIndex} desc={t('sgsRogaDesc')} />
+          <CokingPropCard label={t('sgsG')} value={cokingProperties.cakingIndex} desc={t('sgsCakingDesc')} />
+          <CokingPropCard label={t('sgsGKType')} value={cokingProperties.gkCokeType} desc={t('sgsGrayKingDesc')} />
+          <CokingPropCard label={t('sgsMaxFluidity')} value={cokingProperties.maxFluidity.toLocaleString()} desc={t('sgsGieselerDesc')} highlight />
+          <CokingPropCard label={t('sgsRo')} value={cokingProperties.vitriniteReflectance} desc={t('sgsVitriniteReflectanceDesc')} />
+          <CokingPropCard label={t('sgsVitrinite')} value={`${cokingProperties.vitriniteContent}%`} desc={t('sgsVitriniteContentDesc')} />
         </div>
 
         <div className="mt-4 grid md:grid-cols-2 gap-4">
           <div className="p-3 rounded-lg bg-navy-700/30">
-            <h5 className="text-xs font-medium text-gray-300 mb-2">Gieseler Plastometer (°C)</h5>
+            <h5 className="text-xs font-medium text-gray-300 mb-2">{t('sgsGieselerTitle')}</h5>
             <div className="space-y-1.5">
-              <div className="flex justify-between"><span className="text-xs text-gray-400">Initial Softening</span><span className="text-sm text-gray-200">{cokingProperties.initialSofteningTemp}°C</span></div>
-              <div className="flex justify-between"><span className="text-xs text-gray-400">Max Fluidity Temp</span><span className="text-sm text-gray-200">{cokingProperties.maxFluidityTemp}°C</span></div>
-              <div className="flex justify-between"><span className="text-xs text-gray-400">Resolidification</span><span className="text-sm text-gray-200">{cokingProperties.resolidificationTemp}°C</span></div>
+              <div className="flex justify-between"><span className="text-xs text-gray-400">{t('sgsInitialSoftening')}</span><span className="text-sm text-gray-200">{cokingProperties.initialSofteningTemp}°C</span></div>
+              <div className="flex justify-between"><span className="text-xs text-gray-400">{t('sgsMaxFluidityTemp')}</span><span className="text-sm text-gray-200">{cokingProperties.maxFluidityTemp}°C</span></div>
+              <div className="flex justify-between"><span className="text-xs text-gray-400">{t('sgsResolidification')}</span><span className="text-sm text-gray-200">{cokingProperties.resolidificationTemp}°C</span></div>
             </div>
           </div>
           <div className="p-3 rounded-lg bg-navy-700/30">
-            <h5 className="text-xs font-medium text-gray-300 mb-2">Audibert-Arnu Dilatometer (% / °C)</h5>
+            <h5 className="text-xs font-medium text-gray-300 mb-2">{t('sgsDilatometerTitle')}</h5>
             <div className="space-y-1.5">
-              <div className="flex justify-between"><span className="text-xs text-gray-400">Contraction (a)</span><span className="text-sm text-gray-200">{cokingProperties.contraction}%</span></div>
-              <div className="flex justify-between"><span className="text-xs text-gray-400">Dilatation (b)</span><span className="text-sm text-gray-200">&gt;{cokingProperties.dilatation}%</span></div>
-              <div className="flex justify-between"><span className="text-xs text-gray-400">Softening Temp</span><span className="text-sm text-gray-200">{cokingProperties.softeningTemp}°C</span></div>
-              <div className="flex justify-between"><span className="text-xs text-gray-400">Max Dilatation Temp</span><span className="text-sm text-gray-200">{cokingProperties.maxDilatationTemp}°C</span></div>
+              <div className="flex justify-between"><span className="text-xs text-gray-400">{t('sgsContraction')}</span><span className="text-sm text-gray-200">{cokingProperties.contraction}%</span></div>
+              <div className="flex justify-between"><span className="text-xs text-gray-400">{t('sgsDilatation')}</span><span className="text-sm text-gray-200">&gt;{cokingProperties.dilatation}%</span></div>
+              <div className="flex justify-between"><span className="text-xs text-gray-400">{t('sgsSofteningTemp')}</span><span className="text-sm text-gray-200">{cokingProperties.softeningTemp}°C</span></div>
+              <div className="flex justify-between"><span className="text-xs text-gray-400">{t('sgsMaxDilatationTemp')}</span><span className="text-sm text-gray-200">{cokingProperties.maxDilatationTemp}°C</span></div>
             </div>
           </div>
         </div>
@@ -157,7 +159,7 @@ export default function SgsCertificateViewer() {
         <div className="card-navy p-4">
           <div className="flex items-center gap-2 mb-3">
             <Flame size={16} className="text-cyan-accent" />
-            <h4 className="text-sm font-semibold text-white">Ash Composition (%) — Dry Basis</h4>
+            <h4 className="text-sm font-semibold text-white">{t('sgsAshCompositionTitle')}</h4>
           </div>
           <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
             {[
@@ -172,7 +174,7 @@ export default function SgsCertificateViewer() {
               { label: 'P₂O₅', value: ashComposition.p2o5 },
               { label: 'TiO₂', value: ashComposition.tio2 },
               { label: 'MnO', value: ashComposition.mno },
-              { label: 'Base/Acid Ratio', value: ashComposition.baseAcidRatio },
+              { label: lang === 'zh' ? '碱酸比' : lang === 'ru' ? 'Осн./кисл. отн.' : 'Base/Acid Ratio', value: ashComposition.baseAcidRatio },
             ].map((item) => (
               <div key={item.label} className="flex justify-between py-1 border-b border-navy-700/30">
                 <span className="text-xs text-gray-400">{item.label}</span>
@@ -185,13 +187,13 @@ export default function SgsCertificateViewer() {
         <div className="card-navy p-4">
           <div className="flex items-center gap-2 mb-3">
             <FlaskConical size={16} className="text-emerald-400" />
-            <h4 className="text-sm font-semibold text-white">Sulfur Forms (Air Dry Basis)</h4>
+            <h4 className="text-sm font-semibold text-white">{t('sgsSulfurFormsTitle')}</h4>
           </div>
           <div className="space-y-2">
             {[
-              { label: 'Sulfate Sulfur', value: sulfurForms.sulfateSulfur, key: 'sulfate' },
-              { label: 'Pyrite Sulfur', value: sulfurForms.pyriteSulfur, key: 'pyrite' },
-              { label: 'Organic Sulfur', value: `${sulfurForms.organicSulfur}%`, key: 'organic' },
+              { label: t('sgsSulfateSulfur'), value: sulfurForms.sulfateSulfur, key: 'sulfate' },
+              { label: t('sgsPyriteSulfur'), value: sulfurForms.pyriteSulfur, key: 'pyrite' },
+              { label: t('sgsOrganicSulfur'), value: `${sulfurForms.organicSulfur}%`, key: 'organic' },
             ].map((item) => (
               <div key={item.key} className="flex justify-between items-center py-1.5 border-b border-navy-700/50 last:border-0">
                 <span className="text-xs text-gray-400">{item.label}</span>
@@ -200,15 +202,15 @@ export default function SgsCertificateViewer() {
             ))}
           </div>
           <div className="mt-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-            <p className="text-xs text-emerald-400">Sulfate + Pyrite sulfur both &lt;0.01% — almost all sulfur is organic (0.18%), making it stable during coking.</p>
+            <p className="text-xs text-emerald-400">{t('sgsSulfurNote')}</p>
           </div>
 
           <div className="mt-4 pt-3 border-t border-navy-700/50">
-            <h5 className="text-xs font-medium text-gray-300 mb-2">Petrographic Composition</h5>
+            <h5 className="text-xs font-medium text-gray-300 mb-2">{t('sgsPetrographicTitle')}</h5>
             <div className="space-y-1.5">
-              <div className="flex justify-between"><span className="text-xs text-gray-400">Vitrinite</span><span className="text-sm text-gray-200">{cokingProperties.vitriniteContent}%</span></div>
-              <div className="flex justify-between"><span className="text-xs text-gray-400">Organic Mass</span><span className="text-sm text-gray-200">{cokingProperties.organicMass}%</span></div>
-              <div className="flex justify-between"><span className="text-xs text-gray-400">Mineral Matter</span><span className="text-sm text-gray-200">{cokingProperties.mineralMatter}%</span></div>
+              <div className="flex justify-between"><span className="text-xs text-gray-400">{t('sgsVitrinite')}</span><span className="text-sm text-gray-200">{cokingProperties.vitriniteContent}%</span></div>
+              <div className="flex justify-between"><span className="text-xs text-gray-400">{t('sgsOrganicMass')}</span><span className="text-sm text-gray-200">{cokingProperties.organicMass}%</span></div>
+              <div className="flex justify-between"><span className="text-xs text-gray-400">{t('sgsMineralMatter')}</span><span className="text-sm text-gray-200">{cokingProperties.mineralMatter}%</span></div>
             </div>
           </div>
         </div>
