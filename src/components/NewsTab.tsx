@@ -4,6 +4,17 @@ import { Newspaper, Calendar, Clock, X, ChevronLeft, ChevronRight } from 'lucide
 import { telegramNews } from '../data/telegramNews';
 import { useI18n } from '../i18n/context';
 
+interface NewsMessage {
+  id: string;
+  date: string;
+  time: string;
+  from: string;
+  text: { ru: string; zh: string; en: string };
+  photos: { src: string; thumb: string }[];
+  videos: { title: string; description?: string; status?: string }[];
+  reactions: { emoji: string; count: number }[];
+}
+
 function formatDate(dateStr: string, lang: string): string {
   if (!dateStr) return '';
   const parts = dateStr.split('.');
@@ -78,7 +89,11 @@ export default function NewsTab() {
   const [selectedPhotos, setSelectedPhotos] = useState<{ src: string; thumb: string }[] | null>(null);
   const [expandedMessage, setExpandedMessage] = useState<string | null>(null);
 
-  const messages = telegramNews.messages;
+  const messages = telegramNews.messages as unknown as NewsMessage[];
+
+  const getMessageText = (msg: NewsMessage) => {
+    return msg.text[lang as 'zh' | 'en' | 'ru'] || msg.text.ru;
+  };
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -103,11 +118,12 @@ export default function NewsTab() {
       <div className="space-y-6">
         {messages.map((msg, index) => {
           const isExpanded = expandedMessage === `${msg.date}_${index}`;
-          const textLines = msg.text.split('\n');
-          const shouldTruncate = textLines.length > 6 || msg.text.length > 400;
-          const displayText = isExpanded ? msg.text : shouldTruncate
+          const msgText = getMessageText(msg);
+          const textLines = msgText.split('\n');
+          const shouldTruncate = textLines.length > 6 || msgText.length > 400;
+          const displayText = isExpanded ? msgText : shouldTruncate
             ? textLines.slice(0, 5).join('\n') + '...'
-            : msg.text;
+            : msgText;
 
           return (
             <motion.div
@@ -140,7 +156,7 @@ export default function NewsTab() {
               {/* Message Body */}
               <div className="px-5 py-4">
                 {/* Text */}
-                {msg.text && (
+                {msgText && (
                   <div className="text-gray-200 whitespace-pre-wrap leading-relaxed mb-4">
                     {displayText}
                     {shouldTruncate && !isExpanded && (

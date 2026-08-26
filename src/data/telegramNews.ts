@@ -3,7 +3,7 @@ export interface TelegramMessage {
   date: string;
   time: string;
   from: string;
-  text: string;
+  text: { ru: string; zh: string; en: string };
   photos: { src: string; thumb: string }[];
   videos: { title: string; description: string; status: string }[];
   reactions: { emoji: string; count: number }[];
