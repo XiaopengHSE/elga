@@ -129,6 +129,13 @@ export const translations = {
     presetPacific: '太平洋铁路与埃尔加港',
     presetApac: '亚太市场物流',
 
+    // Chatbot status
+    chatThinking: 'AI 正在思考...',
+    chatTyping: '正在输入...',
+    chatError: '连接 AI 服务时出现错误，请稍后重试。',
+    chatConnectionError: '连接错误',
+    chatStop: '停止生成',
+
     // Generic chatbot response
     genericResponse: `感谢您的提问。作为埃尔加集团 AI 助手，我建议您关注以下核心业务：
 
@@ -333,6 +340,13 @@ export const translations = {
     presetPacific: 'Pacific Railway & Port Elga',
     presetApac: 'APAC Market Logistics',
 
+    // Chatbot status
+    chatThinking: 'AI is thinking...',
+    chatTyping: 'Typing...',
+    chatError: 'An error occurred while connecting to the AI service. Please try again later.',
+    chatConnectionError: 'Connection error',
+    chatStop: 'Stop',
+
     genericResponse: `Thank you for your question. As the ELGA Group AI Assistant, I recommend focusing on these core business areas:
 
 1. **ELGAUGOL Mine**: One of Russia's largest coking coal producers, JORC reserves of 2.2 billion tonnes
@@ -534,6 +548,13 @@ For more details, please select a quick question above or contact the business d
     presetLogistics: 'Элгалогистикс',
     presetPacific: 'Тихоокеанская ж/д и порт Элга',
     presetApac: 'Логистика АТР',
+
+    // Chatbot status
+    chatThinking: 'AI думает...',
+    chatTyping: 'Печатает...',
+    chatError: 'Произошла ошибка подключения к AI-сервису. Пожалуйста, попробуйте позже.',
+    chatConnectionError: 'Ошибка подключения',
+    chatStop: 'Остановить',
 
     genericResponse: `Спасибо за ваш вопрос. Как AI-ассистент группы Элга, рекомендую обратить внимание на следующие ключевые направления:
 

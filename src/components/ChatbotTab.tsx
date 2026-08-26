@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Bot, User, Sparkles } from 'lucide-react';
+import { Send, Bot, User, Sparkles, Loader2, Square } from 'lucide-react';
 import { presetQuestions, chatResponses, type ChatMessage } from '../data/chatbotResponses';
 import { useI18n } from '../i18n/context';
 import MarkdownRenderer from './MarkdownRenderer';
+import { streamChatCompletion, type LLMMessage } from '../services/llmService';
 
 export default function ChatbotTab() {
   const { t, lang } = useI18n();
@@ -15,7 +16,11 @@ export default function ChatbotTab() {
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const streamingContentRef = useRef('');
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -25,7 +30,7 @@ export default function ChatbotTab() {
     scrollToBottom();
   }, [messages]);
 
-  // Update welcome message when language changes
+  // Update welcome message when language changes and chat is empty
   useEffect(() => {
     setMessages((prev) => {
       if (prev.length === 1 && prev[0].role === 'assistant') {
@@ -35,6 +40,108 @@ export default function ChatbotTab() {
     });
   }, [lang, t]);
 
+  const buildHistory = (currentMessages: ChatMessage[]): LLMMessage[] => {
+    // Skip the welcome message, include only real conversation
+    // Map 'assistant' -> 'model' for Gemini API
+    return currentMessages
+      .filter((m) => m.role === 'user' || m.role === 'assistant')
+      .map((m) => ({
+        role: m.role === 'assistant' ? ('model' as const) : ('user' as const),
+        content: m.content,
+      }));
+  };
+
+  const handleStop = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    setIsStreaming(false);
+    setIsTyping(false);
+  }, []);
+
+  const callLLM = useCallback(
+    async (userContent: string, currentMessages: ChatMessage[]) => {
+      console.log('[callLLM] userContent:', userContent);
+      setError(null);
+      setIsTyping(true);
+      setIsStreaming(true);
+
+      // Add user message
+      const withUser = [...currentMessages, { role: 'user' as const, content: userContent }];
+      setMessages(withUser);
+
+      // Add empty assistant placeholder
+      const withAssistant = [...withUser, { role: 'assistant' as const, content: '' }];
+      setMessages(withAssistant);
+
+      const abortController = new AbortController();
+      abortControllerRef.current = abortController;
+      streamingContentRef.current = '';
+
+      try {
+        const history = buildHistory(withUser);
+        console.log('[callLLM] history:', JSON.stringify(history));
+        await streamChatCompletion(
+          history,
+          lang,
+          {
+            onChunk: (chunk) => {
+              streamingContentRef.current += chunk;
+              setMessages((prev) => {
+                const updated = [...prev];
+                const last = updated[updated.length - 1];
+                if (last && last.role === 'assistant') {
+                  last.content = streamingContentRef.current;
+                }
+                return updated;
+              });
+            },
+            onDone: () => {
+              console.log('[callLLM] stream done');
+              setIsTyping(false);
+              setIsStreaming(false);
+              abortControllerRef.current = null;
+            },
+            onError: (err) => {
+              console.error('[callLLM] stream error:', err.message);
+              setIsTyping(false);
+              setIsStreaming(false);
+              abortControllerRef.current = null;
+              setError(err.message);
+              setMessages((prev) => {
+                const updated = [...prev];
+                const last = updated[updated.length - 1];
+                if (last && last.role === 'assistant') {
+                  last.content = streamingContentRef.current || t('chatError');
+                }
+                return updated;
+              });
+            },
+          },
+          abortController.signal
+        );
+      } catch (err) {
+        console.error('[callLLM] catch error:', err);
+        setIsTyping(false);
+        setIsStreaming(false);
+        abortControllerRef.current = null;
+        const msg = err instanceof Error ? err.message : String(err);
+        setError(msg);
+        setMessages((prev) => {
+          const updated = [...prev];
+          const last = updated[updated.length - 1];
+          if (last && last.role === 'assistant') {
+            last.content = t('chatError');
+          }
+          return updated;
+        });
+      }
+    },
+    [lang, t]
+  );
+
+  // Simulate typing effect for preset responses (local, fast)
   const simulateTyping = (text: string, callback: () => void) => {
     setIsTyping(true);
     const chars = text.split('');
@@ -53,7 +160,7 @@ export default function ChatbotTab() {
           }
           return newMessages;
         });
-        setTimeout(typeChar, 15);
+        setTimeout(typeChar, 12);
       } else {
         setIsTyping(false);
         callback();
@@ -64,29 +171,57 @@ export default function ChatbotTab() {
     setTimeout(typeChar, 300);
   };
 
-  const handleSend = useCallback((questionKey: string) => {
-    if (isTyping) return;
+  const handlePresetSend = useCallback(
+    (responseKey: string, displayLabel: string) => {
+      if (isTyping || isStreaming) return;
 
-    const questionLabel = t(questionKey as any);
-    setMessages((prev) => [...prev, { role: 'user', content: questionLabel }]);
+      console.log('[handlePresetSend] responseKey:', responseKey);
+      setMessages((prev) => [...prev, { role: 'user', content: displayLabel }]);
 
-    const response = chatResponses[lang]?.[questionKey] || chatResponses['zh']?.[questionKey] || t('genericResponse');
+      const response =
+        chatResponses[lang]?.[responseKey] ||
+        chatResponses['zh']?.[responseKey] ||
+        t('genericResponse');
 
-    setTimeout(() => {
-      simulateTyping(response, () => {});
-    }, 500);
-  }, [isTyping, lang, t]);
+      console.log('[handlePresetSend] response length:', response.length);
+
+      setTimeout(() => {
+        simulateTyping(response, () => {});
+      }, 400);
+    },
+    [isTyping, isStreaming, lang, t]
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputValue.trim() || isTyping) return;
-    setMessages((prev) => [...prev, { role: 'user', content: inputValue }]);
-    setInputValue('');
+    if (!inputValue.trim() || isTyping || isStreaming) return;
 
-    setTimeout(() => {
-      simulateTyping(t('genericResponse'), () => {});
-    }, 500);
+    const question = inputValue.trim();
+    setInputValue('');
+    console.log('[handleSubmit] question:', question);
+
+    // Check if input exactly matches a preset label (case-insensitive)
+    const matchedPreset = presetQuestions.find((p) => {
+      const label = t(p.labelKey as any);
+      return question.toLowerCase() === label.toLowerCase();
+    });
+
+    if (matchedPreset) {
+      console.log('[handleSubmit] matched preset:', matchedPreset.id);
+      handlePresetSend(matchedPreset.responseKey, t(matchedPreset.labelKey as any));
+      return;
+    }
+
+    // Otherwise, call LLM
+    console.log('[handleSubmit] calling LLM');
+    callLLM(question, messages);
   };
+
+  const statusText = isStreaming
+    ? t('chatThinking')
+    : isTyping
+      ? t('chatTyping')
+      : null;
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 h-[calc(100vh-180px)] flex flex-col">
@@ -104,8 +239,8 @@ export default function ChatbotTab() {
           {presetQuestions.map((preset) => (
             <button
               key={preset.id}
-              onClick={() => handleSend(preset.id)}
-              disabled={isTyping}
+              onClick={() => handlePresetSend(preset.responseKey, t(preset.labelKey as any))}
+              disabled={isTyping || isStreaming}
               className="px-3 py-1.5 rounded-full bg-navy-700 border border-navy-600 text-sm text-gray-300 hover:border-amber-accent/50 hover:text-amber-accent transition-colors disabled:opacity-50"
             >
               {t(preset.labelKey as any)}
@@ -113,6 +248,20 @@ export default function ChatbotTab() {
           ))}
         </div>
       </motion.div>
+
+      {/* Error Banner */}
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="mb-3 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs"
+          >
+            {t('chatConnectionError')}: {error}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto space-y-4 mb-4 pr-2">
@@ -136,12 +285,12 @@ export default function ChatbotTab() {
                     : 'bg-navy-700 text-gray-200 border border-navy-600'
                 }`}
               >
-                {message.role === 'assistant' && isTyping && index === messages.length - 1 ? (
+                {message.role === 'assistant' && isTyping && index === messages.length - 1 && !isStreaming ? (
                   <span className="whitespace-pre-wrap">{message.content}</span>
                 ) : (
                   <MarkdownRenderer text={message.content} />
                 )}
-                {message.role === 'assistant' && isTyping && index === messages.length - 1 && (
+                {message.role === 'assistant' && isTyping && index === messages.length - 1 && !isStreaming && (
                   <span className="typewriter-cursor" />
                 )}
               </div>
@@ -153,6 +302,19 @@ export default function ChatbotTab() {
             </motion.div>
           ))}
         </AnimatePresence>
+
+        {/* Status indicator */}
+        {statusText && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex items-center gap-2 text-xs text-gray-500 ml-11"
+          >
+            <Loader2 size={12} className="animate-spin" />
+            {statusText}
+          </motion.div>
+        )}
+
         <div ref={messagesEndRef} />
       </div>
 
@@ -163,16 +325,27 @@ export default function ChatbotTab() {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder={t('chatPlaceholder')}
-          disabled={isTyping}
+          disabled={isTyping || isStreaming}
           className="flex-1 px-4 py-3 rounded-xl bg-navy-700 border border-navy-600 text-white placeholder-gray-500 text-sm focus:outline-none focus:border-cyan-accent/50 transition-colors disabled:opacity-50"
         />
-        <button
-          type="submit"
-          disabled={isTyping || !inputValue.trim()}
-          className="px-4 py-3 rounded-xl bg-cyan-accent/20 border border-cyan-accent/30 text-cyan-accent hover:bg-cyan-accent/30 transition-colors disabled:opacity-50"
-        >
-          <Send size={18} />
-        </button>
+        {isStreaming ? (
+          <button
+            type="button"
+            onClick={handleStop}
+            className="px-4 py-3 rounded-xl bg-red-500/20 border border-red-500/30 text-red-400 hover:bg-red-500/30 transition-colors"
+            title={t('chatStop')}
+          >
+            <Square size={18} />
+          </button>
+        ) : (
+          <button
+            type="submit"
+            disabled={isTyping || !inputValue.trim()}
+            className="px-4 py-3 rounded-xl bg-cyan-accent/20 border border-cyan-accent/30 text-cyan-accent hover:bg-cyan-accent/30 transition-colors disabled:opacity-50"
+          >
+            <Send size={18} />
+          </button>
+        )}
       </form>
     </div>
   );
