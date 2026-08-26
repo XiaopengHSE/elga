@@ -1,63 +1,25 @@
 export interface RailwayStage {
-  stage: number;
+  year: string;
   capacity: string;
   capacityEn: string;
-  works: string[];
 }
 
 export const railwayExpansion: RailwayStage[] = [
-  {
-    stage: 1,
-    capacity: '12 млн т/год',
-    capacityEn: '12 Mt/y',
-    works: [
-      'Завершение строительства предыдущим собственником',
-      'Ввод в эксплуатацию базовой инфраструктуры',
-    ],
-  },
-  {
-    stage: 2,
-    capacity: '18 млн т/год',
-    capacityEn: '18 Mt/y',
-    works: [
-      'Работы на станции Эльга (1-й пусковой комплекс)',
-      'Строительство погрузочно-складского комплекса',
-      'Участок ж/д разъезд 317 км — ст. Эльга',
-      'Инженерные коммуникации и вспомогательные здания',
-    ],
-  },
-  {
-    stage: 3,
-    capacity: '20 млн т/год',
-    capacityEn: '20 Mt/y',
-    works: [
-      'Станция Эльга (2-й пусковой комплекс)',
-      'Дополнительные погрузочно-складские комплексы',
-      'Укладка дополнительных путей',
-      'Вспомогательные здания и сооружения',
-    ],
-  },
-  {
-    stage: 4,
-    capacity: '24 млн т/год',
-    capacityEn: '24 Mt/y',
-    works: [
-      'Станция Эльга (3-й пусковой комплекс)',
-      'Погрузочно-складские комплексы',
-      'Развитие обгонных путей',
-      'Развитие станции А',
-      'Автоблокировка на перегонах',
-    ],
-  },
-  {
-    stage: 5,
-    capacity: '30 млн т/год',
-    capacityEn: '30 Mt/y',
-    works: [
-      'Станция Эльга (4-й и 5-й пусковые комплексы)',
-      'Погрузочно-складские комплексы',
-      'Развитие обгонных путей',
-      'Окончательное завершение модернизации',
-    ],
-  },
+  { year: '2020', capacity: '12 млн т/год', capacityEn: '12 Mt/y' },
+  { year: '2021', capacity: '15 млн т/год', capacityEn: '15 Mt/y' },
+  { year: '2022', capacity: '24 млн т/год', capacityEn: '24 Mt/y' },
+  { year: '2023–2035', capacity: '30 млн т/год', capacityEn: '30 Mt/y' },
+];
+
+export interface ProductionPlan {
+  year: string;
+  mining: number;
+  shipment: number;
+}
+
+export const productionPlan: ProductionPlan[] = [
+  { year: '2020', mining: 7, shipment: 7 },
+  { year: '2021', mining: 18, shipment: 15 },
+  { year: '2022', mining: 35, shipment: 24 },
+  { year: '2023–2035', mining: 45, shipment: 30 },
 ];
