@@ -46,16 +46,16 @@ export default function OperationalAssets() {
                 </div>
                 <div>
                   <div className="text-sm font-semibold text-white">{sub.nameShort}</div>
-                  <div className="text-xs text-gray-500">{sub.role}</div>
+                  <div className="text-xs text-gray-500">{sub.role[lang]}</div>
                 </div>
               </div>
-              <p className="text-xs text-gray-400 leading-relaxed mb-2">{sub.description}</p>
+              <p className="text-xs text-gray-400 leading-relaxed mb-2">{sub.description[lang]}</p>
               {sub.stats && (
                 <div className="flex gap-2">
                   {sub.stats.map((stat) => (
-                    <div key={stat.label} className="bg-navy-800/60 rounded px-2 py-1">
+                    <div key={stat.label[lang]} className="bg-navy-800/60 rounded px-2 py-1">
                       <div className="text-xs font-bold text-amber-400">{stat.value}</div>
-                      <div className="text-[10px] text-gray-500">{stat.label}</div>
+                      <div className="text-[10px] text-gray-500">{stat.label[lang]}</div>
                     </div>
                   ))}
                 </div>

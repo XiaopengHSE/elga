@@ -25,21 +25,21 @@ export default function ProcessingPlantInfo() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         <div className="bg-navy-900/50 rounded-lg p-3 border border-navy-700/30 text-center">
           <Settings size={16} className="text-emerald-400 mx-auto mb-1" />
-          <div className="text-lg font-bold text-white">{lang === 'ru' ? processingPlantInfo.currentCapacity : processingPlantInfo.currentCapacityEn}</div>
+          <div className="text-lg font-bold text-white">{processingPlantInfo.currentCapacity[lang]}</div>
           <div className="text-xs text-gray-500">
             {lang === 'zh' ? '当前产能' : lang === 'en' ? 'Current Capacity' : 'Текущая мощность'}
           </div>
         </div>
         <div className="bg-navy-900/50 rounded-lg p-3 border border-navy-700/30 text-center">
           <Settings size={16} className="text-amber-400 mx-auto mb-1" />
-          <div className="text-lg font-bold text-white">{lang === 'ru' ? processingPlantInfo.targetCapacity : processingPlantInfo.targetCapacityEn}</div>
+          <div className="text-lg font-bold text-white">{processingPlantInfo.targetCapacity[lang]}</div>
           <div className="text-xs text-gray-500">
             {lang === 'zh' ? '扩建计划' : lang === 'en' ? 'Expansion Plan' : 'План расширения'}
           </div>
         </div>
         <div className="bg-navy-900/50 rounded-lg p-3 border border-navy-700/30 text-center">
           <Settings size={16} className="text-cyan-400 mx-auto mb-1" />
-          <div className="text-lg font-bold text-white">{lang === 'ru' ? processingPlantInfo.outputQuality : processingPlantInfo.outputQualityEn}</div>
+          <div className="text-lg font-bold text-white">{processingPlantInfo.outputQuality[lang]}</div>
           <div className="text-xs text-gray-500">
             {lang === 'zh' ? '产品质量' : lang === 'en' ? 'Output Quality' : 'Качество продукции'}
           </div>
@@ -68,9 +68,9 @@ export default function ProcessingPlantInfo() {
             </div>
             <div className="flex-1 bg-navy-900/30 rounded-lg p-3 border border-navy-700/20">
               <div className="text-sm font-medium text-white">
-                {lang === 'ru' ? step.title : step.titleEn}
+                {step.title[lang]}
               </div>
-              <div className="text-xs text-gray-500 mt-0.5">{step.description}</div>
+              <div className="text-xs text-gray-500 mt-0.5">{step.description[lang]}</div>
             </div>
           </motion.div>
         ))}

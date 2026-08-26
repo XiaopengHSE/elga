@@ -51,17 +51,17 @@ export default function CompanyHistory() {
               <div className="bg-navy-900/50 rounded-lg p-4 border border-navy-700/30">
                 <div className="flex items-center gap-3 mb-1">
                   <span className="text-lg font-bold text-amber-400">{event.year}</span>
-                  <span className="text-sm font-medium text-white">{event.title}</span>
+                  <span className="text-sm font-medium text-white">{event.title[lang]}</span>
                 </div>
                 {historyImages[event.year] && (
                   <img
                     src={historyImages[event.year]}
-                    alt={event.title}
+                    alt={event.title[lang]}
                     className="w-full h-32 object-cover rounded-lg mb-2"
                     loading="lazy"
                   />
                 )}
-                <p className="text-sm text-gray-400 leading-relaxed">{event.description}</p>
+                <p className="text-sm text-gray-400 leading-relaxed">{event.description[lang]}</p>
               </div>
             </motion.div>
           ))}
